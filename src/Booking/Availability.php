@@ -125,7 +125,7 @@ class Availability
     private function busy(array $calendar, int $from, int $to, int|null $excludeBooking, bool $fresh): array
     {
         $ids = array_values(array_unique(array_filter(array_map('trim', preg_split('/[\s,]+/', (string) $calendar['googleBusyCalendars']) ?: []))));
-        $ids = [] === $ids ? [$calendar['googleCalendarId']] : $ids;
+        $ids = array_values(array_unique([$calendar['googleCalendarId'], ...$ids]));
 
         $google = static fn (GoogleCalendar $api): array => $api->busy($calendar['googleCredentials'], $ids, $from, $to);
 

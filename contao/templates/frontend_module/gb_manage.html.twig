@@ -11,9 +11,9 @@
             {% if notice == 'rescheduled' %}<p class="gb-notice" role="status">{{ 'MSC.gb_rescheduled_notice'|trans([], 'contao_default') }}</p>{% endif %}
             {% if errors.form|default %}<p class="gb-error" role="alert">{{ errors.form }}</p>{% endif %}
             <div class="gb-summary{{ booking.status == 'cancelled' ? ' is-cancelled' }}">
-                <p class="gb-summary__type"><strong>{{ booking_type.title }}</strong>{% if booking.status == 'cancelled' %} · {{ 'MSC.gb_status_cancelled'|trans([], 'contao_default') }}{% endif %}</p>
+                <p class="gb-summary__type gb-meta"><strong>{{ booking_type.title }}</strong>{% if booking.status == 'cancelled' %}<span class="gb-sep" aria-hidden="true"></span><span>{{ 'MSC.gb_status_cancelled'|trans([], 'contao_default') }}</span>{% endif %}</p>
                 <p class="gb-summary__when">{{ when.date }}, {{ when.time }}</p>
-                {% if booking.status == 'confirmed' and booking.zoomJoinUrl %}<p><a class="gb-link" href="{{ booking.zoomJoinUrl }}" target="_blank" rel="noopener">{{ 'MSC.gb_zoom_link'|trans([], 'contao_default') }}</a>{% if booking.zoomPassword %} · {{ 'MSC.gb_zoom_password'|trans([booking.zoomPassword], 'contao_default') }}{% endif %}</p>{% endif %}
+                {% if booking.status == 'confirmed' and booking.zoomJoinUrl %}<p><a class="gb-link" href="{{ booking.zoomJoinUrl }}" target="_blank" rel="noopener">{{ 'MSC.gb_zoom_link'|trans([], 'contao_default') }}</a>{% if booking.zoomPassword %}<br>{{ 'MSC.gb_zoom_password'|trans([booking.zoomPassword], 'contao_default') }}{% endif %}</p>{% endif %}
             </div>
             {% if can_manage %}
                 {% if step == 'reschedule' %}

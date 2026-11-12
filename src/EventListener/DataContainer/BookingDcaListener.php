@@ -6,13 +6,13 @@ namespace Gratlinie\GratBookingBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Gratlinie\GratBookingBundle\ApiException;
 use Gratlinie\GratBookingBundle\Booking\Availability;
 use Gratlinie\GratBookingBundle\Google\GoogleCalendar;
+use Gratlinie\GratBookingBundle\Notification\Notifier;
 use Gratlinie\GratBookingBundle\Zoom\Zoom;
 
 /**
@@ -28,11 +28,20 @@ class BookingDcaListener
     ) {
     }
 
+    /**
+     * Den privaten Schlüssel nach dem Speichern nicht mehr anzeigen; leer lassen behält ihn.
+     */
+    #[AsCallback(table: 'tl_gb_calendar', target: 'fields.googleCredentials.load')]
+    public function loadCredentials(string|null $value): string
+    {
+        return '';
+    }
+
     #[AsCallback(table: 'tl_gb_calendar', target: 'fields.googleCredentials.save')]
     public function saveCredentials(string|null $value, DataContainer $dc): string|null
     {
         if (null === $value || '' === trim($value)) {
-            return $value;
+            return $this->db->fetchOne('SELECT googleCredentials FROM tl_gb_calendar WHERE id = ?', [$dc->id]) ?: null;
         }
 
         // Wirft eine verständliche Meldung, wenn der JSON-Schlüssel nicht passt
@@ -111,7 +120,8 @@ class BookingDcaListener
     #[AsCallback(table: 'tl_gb_booking', target: 'list.label.label')]
     public function bookingLabel(array $row, string $label, DataContainer $dc, array $columns): array
     {
-        $columns[0] = Date::parse(Date::getNumericDatimFormat(), (int) $row['start']);
+        $timezone = (string) ($this->db->fetchOne('SELECT timezone FROM tl_gb_calendar WHERE id = ?', [$row['calendar']]) ?: 'Europe/Berlin');
+        $columns[0] = Notifier::datetime((int) $row['start'], $timezone);
         $columns[2] = StringUtil::specialchars(trim($row['firstname'].' '.$row['lastname']));
 
         return $columns;

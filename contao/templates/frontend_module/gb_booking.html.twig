@@ -15,11 +15,11 @@
             <p class="gb-empty">{{ 'MSC.gb_unavailable'|trans([], 'contao_default') }}</p>
         {% elseif step == 'types' %}
             <ul class="gb-types" role="list">
-                {% for t in types %}
+                {% for t in gb_types %}
                     <li class="gb-type">
                         <a class="gb-type__link" href="{{ t.url }}">
                             <span class="gb-type__title">{{ t.title }}</span>
-                            <span class="gb-type__meta">{{ 'MSC.gb_minutes'|trans([t.duration], 'contao_default') }}{% if t.zoom %} · Zoom{% endif %}</span>
+                            <span class="gb-type__meta gb-meta"><span>{{ 'MSC.gb_minutes'|trans([t.duration], 'contao_default') }}</span>{% if t.zoom %}<span class="gb-sep" aria-hidden="true"></span><span>Zoom</span>{% endif %}</span>
                             {% if t.description %}<span class="gb-type__text">{{ t.description|nl2br }}</span>{% endif %}
                         </a>
                     </li>
@@ -27,7 +27,7 @@
             </ul>
         {% else %}
             <div class="gb-head">
-                <p class="gb-head__type"><strong>{{ type.title }}</strong> · {{ 'MSC.gb_minutes'|trans([type.duration], 'contao_default') }}{% if type.zoom %} · Zoom{% endif %}</p>
+                <p class="gb-head__type gb-meta"><strong>{{ gb_type.title }}</strong><span class="gb-sep" aria-hidden="true"></span><span>{{ 'MSC.gb_minutes'|trans([gb_type.duration], 'contao_default') }}</span>{% if gb_type.zoom %}<span class="gb-sep" aria-hidden="true"></span><span>Zoom</span>{% endif %}</p>
                 {% if change_url %}<a class="gb-link" href="{{ change_url }}">{{ 'MSC.gb_change_type'|trans([], 'contao_default') }}</a>{% endif %}
             </div>
             {% if errors.zeit|default %}<p class="gb-error" role="alert">{{ errors.zeit }}</p>{% endif %}

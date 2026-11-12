@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_gb_calendar'] = [
         ],
         'googleCredentials' => [
             'inputType' => 'textarea',
-            'eval' => ['decodeEntities' => true, 'preserveTags' => true, 'doNotShow' => true, 'doNotCopy' => true, 'class' => 'monospace', 'rte' => 'ace|json', 'tl_class' => 'clr'],
+            'eval' => ['decodeEntities' => true, 'preserveTags' => true, 'doNotShow' => true, 'doNotCopy' => true, 'class' => 'monospace', 'rows' => 4, 'tl_class' => 'clr'],
             'sql' => 'text NULL',
         ],
         'googleAccount' => [

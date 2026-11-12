@@ -153,11 +153,6 @@
   background: color-mix(in srgb, var(--gb-accent) 20%, transparent);
 }
 
-:where(.gb-day.is-selected, .gb-time.is-selected) {
-  background: var(--gb-accent);
-  color: var(--gb-on-accent);
-}
-
 :where(.gb-times__list) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
@@ -182,6 +177,11 @@
 :where(.gb-time:hover, .gb-time:focus-visible) {
   border-color: var(--gb-accent);
   background: color-mix(in srgb, var(--gb-accent) 8%, transparent);
+}
+
+:where(.gb-day.is-selected, .gb-time.is-selected, .gb-day.is-selected:hover, .gb-time.is-selected:hover) {
+  background: var(--gb-accent);
+  color: var(--gb-on-accent);
 }
 
 :where(.gb-form) {
@@ -246,6 +246,20 @@
 
 :where(.gb-hint, .gb-empty) {
   color: var(--gb-muted);
+}
+
+:where(.gb-meta) {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5em;
+}
+
+:where(.gb-sep) {
+  inline-size: 0.22em;
+  block-size: 0.22em;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 :where(.gb-actions) {

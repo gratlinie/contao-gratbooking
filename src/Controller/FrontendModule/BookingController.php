@@ -67,8 +67,8 @@ class BookingController extends AbstractBookingController
         $type = 1 === \count($types) ? $types[0] : (array_values(array_filter($types, static fn (array $t): bool => $t['alias'] === $alias || (string) $t['id'] === $alias))[0] ?? null);
         $base = $request->getBaseUrl().$request->getPathInfo();
 
-        $template->set('types', array_map(static fn (array $t): array => $t + ['url' => $base.'?termin='.rawurlencode($t['alias'] ?: (string) $t['id']).'#'.$anchor], $types));
-        $template->set('type', $type);
+        $template->set('gb_types', array_map(static fn (array $t): array => $t + ['url' => $base.'?termin='.rawurlencode($t['alias'] ?: (string) $t['id']).'#'.$anchor], $types));
+        $template->set('gb_type', $type);
         $template->set('change_url', \count($types) > 1 ? $base.'#'.$anchor : null);
 
         if (null === $type) {

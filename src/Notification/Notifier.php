@@ -6,7 +6,6 @@ namespace Gratlinie\GratBookingBundle\Notification;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\Date;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Gratlinie\GratBookingBundle\Booking\Ics;
@@ -15,10 +14,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\NotificationCenterBundle\BulkyItem\BulkyItemStorage;
 use Terminal42\NotificationCenterBundle\BulkyItem\FileItem;
 use Terminal42\NotificationCenterBundle\NotificationCenter;
+use Terminal42\NotificationCenterBundle\Parcel\Stamp\BulkyItemsStamp;
 
 /**
  * Verschickt alle Benachrichtigungen eines Buchungs-Typs (Notification Center) mit den Tokens der Buchung und
- * der Kalenderdatei als Anhang.
+ * der Kalenderdatei als Anhang (##booking_ics## in „Anhänge über Tokens“).
  */
 class Notifier
 {
@@ -44,8 +44,10 @@ class Notifier
         try {
             $tokens = $this->tokens($booking, $type) + $extra;
 
+            // Anhänge nimmt das Notification Center nur, wenn der Gutschein auch als Stempel am Versand hängt
             foreach ($ids as $id) {
-                $this->notificationCenter->sendNotification((int) $id, $tokens, 'de');
+                $stamps = $this->notificationCenter->createBasicStampsForNotification((int) $id, $tokens, 'de');
+                $this->notificationCenter->sendNotificationWithStamps((int) $id, $stamps->with(new BulkyItemsStamp([$tokens['booking_ics']])));
             }
         } catch (\Throwable $exception) {
             $this->contaoErrorLogger->error(\sprintf('GratBooking: Benachrichtigung „%s“ zu Buchung ID %d nicht verschickt: %s', $type, $booking['id'], $exception->getMessage()));
@@ -62,6 +64,14 @@ class Notifier
         }
 
         return $this->contentUrlGenerator->generate($page, [], UrlGeneratorInterface::ABSOLUTE_URL).'?token='.$booking['token'];
+    }
+
+    /**
+     * Datum und Uhrzeit in der Zeitzone des Kalenders, unabhängig von der Zeitzone des Servers.
+     */
+    public static function datetime(int $timestamp, string $timezone, string $format = 'd.m.Y H:i'): string
+    {
+        return (new \DateTimeImmutable('@'.$timestamp))->setTimezone(new \DateTimeZone($timezone ?: 'Europe/Berlin'))->format($format);
     }
 
     /**
@@ -101,8 +111,8 @@ class Notifier
             'booking_type' => $bookingType['title'] ?? '',
             'booking_date' => $when['date'],
             'booking_time' => $when['time'],
-            'booking_start' => Date::parse('Y-m-d H:i', (int) $booking['start']),
-            'booking_end' => Date::parse('Y-m-d H:i', (int) $booking['end']),
+            'booking_start' => self::datetime((int) $booking['start'], $tz, 'Y-m-d H:i'),
+            'booking_end' => self::datetime((int) $booking['end'], $tz, 'Y-m-d H:i'),
             'booking_duration' => (string) intdiv((int) $booking['end'] - (int) $booking['start'], 60),
             'booking_firstname' => $booking['firstname'],
             'booking_lastname' => $booking['lastname'],
