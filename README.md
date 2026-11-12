@@ -43,8 +43,9 @@ Kalenderdatei kommt aus dem Notification Center.
 ## Zoom einrichten
 
 1. Im [Zoom App Marketplace](https://marketplace.zoom.us/) *Develop → Build App → Server-to-Server OAuth App*.
-2. Scopes `meeting:write:meeting:admin` und `meeting:delete:meeting:admin` (ältere Konten: `meeting:write:admin`)
-   hinzufügen, App aktivieren.
+2. Scopes `meeting:write:meeting:admin` (anlegen), `meeting:update:meeting:admin` (verschieben) und
+   `meeting:delete:meeting:admin` (absagen) hinzufügen – ältere Apps: `meeting:write:admin` –, „Event Subscriptions“
+   aus lassen, App aktivieren.
 3. **Account-ID, Client-ID, Client-Secret** in den Kalender eintragen, speichern („Zoom-Anmeldung erfolgreich“).
 
 Im kostenlosen Basic-Konto enden Meetings mit mehreren Teilnehmern nach 40 Minuten.

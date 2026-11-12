@@ -13,7 +13,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Zoom-Meetings über eine Server-to-Server-OAuth-App im Zoom-Konto des Kunden (Account-ID, Client-ID,
- * Client-Secret; Scopes meeting:write:meeting:admin und meeting:delete:meeting:admin bzw. meeting:write:admin).
+ * Client-Secret; Scopes meeting:write:meeting:admin, meeting:update:meeting:admin und meeting:delete:meeting:admin,
+ * ältere Apps meeting:write:admin).
  *
  * GRATBOOKING_ZOOM_URL ersetzt die Basis-URL von API und Anmeldung (Tests gegen einen Mock-Server).
  */
