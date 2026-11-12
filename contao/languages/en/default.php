@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+$GLOBALS['TL_LANG']['MSC']['gb_no_slots'] = 'There are no free slots at the moment. Please get in touch directly.';
+$GLOBALS['TL_LANG']['MSC']['gb_no_slots_month'] = 'No more free slots this month.';
+$GLOBALS['TL_LANG']['MSC']['gb_unavailable'] = 'Booking is not available right now. Please try again later or get in touch directly.';
+$GLOBALS['TL_LANG']['MSC']['gb_prev_month'] = 'Previous month';
+$GLOBALS['TL_LANG']['MSC']['gb_next_month'] = 'Next month';
+$GLOBALS['TL_LANG']['MSC']['gb_minutes'] = '%s minutes';
+$GLOBALS['TL_LANG']['MSC']['gb_change_type'] = 'Choose another type';
+$GLOBALS['TL_LANG']['MSC']['gb_pick_time'] = 'Please choose a time.';
+$GLOBALS['TL_LANG']['MSC']['gb_firstname'] = 'First name';
+$GLOBALS['TL_LANG']['MSC']['gb_lastname'] = 'Last name';
+$GLOBALS['TL_LANG']['MSC']['gb_email_label'] = 'Email address';
+$GLOBALS['TL_LANG']['MSC']['gb_phone'] = 'Phone (optional)';
+$GLOBALS['TL_LANG']['MSC']['gb_message'] = 'What is it about? (optional)';
+$GLOBALS['TL_LANG']['MSC']['gb_privacy_default'] = 'I agree that my details are processed to arrange and hold the appointment. The appointment is entered in a Google Calendar, the meeting takes place via Zoom.';
+$GLOBALS['TL_LANG']['MSC']['gb_book'] = 'Book appointment';
+$GLOBALS['TL_LANG']['MSC']['gb_required'] = 'Please fill in this field.';
+$GLOBALS['TL_LANG']['MSC']['gb_email'] = 'Please enter a valid email address.';
+$GLOBALS['TL_LANG']['MSC']['gb_privacy_required'] = 'Please agree to the processing of your details.';
+$GLOBALS['TL_LANG']['MSC']['gb_slot_taken'] = 'Sorry, this slot has just been taken. Please choose another one.';
+$GLOBALS['TL_LANG']['MSC']['gb_failed'] = 'The booking failed. Please try again or get in touch directly.';
+$GLOBALS['TL_LANG']['MSC']['gb_done_title'] = 'Your appointment is booked.';
+$GLOBALS['TL_LANG']['MSC']['gb_done_text'] = 'The confirmation with all details is on its way to %s.';
+$GLOBALS['TL_LANG']['MSC']['gb_zoom_link'] = 'Join the Zoom meeting';
+$GLOBALS['TL_LANG']['MSC']['gb_zoom_password'] = 'Passcode: %s';
+$GLOBALS['TL_LANG']['MSC']['gb_missing'] = 'This booking was not found. Please use the link from your confirmation.';
+$GLOBALS['TL_LANG']['MSC']['gb_status_cancelled'] = 'cancelled';
+$GLOBALS['TL_LANG']['MSC']['gb_cancelled_notice'] = 'Your appointment is cancelled. You will receive a confirmation by email.';
+$GLOBALS['TL_LANG']['MSC']['gb_rescheduled_notice'] = 'Your appointment has been moved. You will receive a confirmation by email.';
+$GLOBALS['TL_LANG']['MSC']['gb_manage_until'] = 'You can cancel or move the appointment until %s.';
+$GLOBALS['TL_LANG']['MSC']['gb_manage_closed'] = 'It is too late to cancel or move online. Please get in touch directly %s.';
+$GLOBALS['TL_LANG']['MSC']['gb_reschedule'] = 'Move appointment';
+$GLOBALS['TL_LANG']['MSC']['gb_reschedule_title'] = 'Choose a new slot';
+$GLOBALS['TL_LANG']['MSC']['gb_reschedule_to'] = 'New appointment: %s';
+$GLOBALS['TL_LANG']['MSC']['gb_reschedule_confirm'] = 'Confirm move';
+$GLOBALS['TL_LANG']['MSC']['gb_cancel'] = 'Cancel appointment';
+$GLOBALS['TL_LANG']['MSC']['gb_cancel_confirm'] = 'Do you really want to cancel the appointment?';
+$GLOBALS['TL_LANG']['MSC']['gb_cancel_yes'] = 'Yes, cancel';
+$GLOBALS['TL_LANG']['MSC']['gb_back'] = 'Back';

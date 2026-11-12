@@ -1,0 +1,65 @@
+{% extends '@Contao/frontend_module/_base.html.twig' %}
+{% import '@Contao/component/_gb_picker.html.twig' as gb %}
+
+{% block content %}
+    {% add 'gratbooking_css' to head %}<link rel="stylesheet" href="{{ asset('css/gratbooking.css', 'gratlinie_grat_booking') }}">{% endadd %}
+    <div class="gb" id="{{ anchor }}">
+        {% if step == 'done' %}
+            <div class="gb-done" role="status">
+                <h2 class="gb-done__title">{{ 'MSC.gb_done_title'|trans([], 'contao_default') }}</h2>
+                <p class="gb-done__when"><strong>{{ booking_type.title }}</strong><br>{{ when.date }}, {{ when.time }}</p>
+                <p>{{ 'MSC.gb_done_text'|trans([booking.email], 'contao_default') }}</p>
+                {% if booking.zoomJoinUrl %}<p><a class="gb-link" href="{{ booking.zoomJoinUrl }}" target="_blank" rel="noopener">{{ 'MSC.gb_zoom_link'|trans([], 'contao_default') }}</a></p>{% endif %}
+            </div>
+        {% elseif step == 'unavailable' %}
+            <p class="gb-empty">{{ 'MSC.gb_unavailable'|trans([], 'contao_default') }}</p>
+        {% elseif step == 'types' %}
+            <ul class="gb-types" role="list">
+                {% for t in types %}
+                    <li class="gb-type">
+                        <a class="gb-type__link" href="{{ t.url }}">
+                            <span class="gb-type__title">{{ t.title }}</span>
+                            <span class="gb-type__meta">{{ 'MSC.gb_minutes'|trans([t.duration], 'contao_default') }}{% if t.zoom %} · Zoom{% endif %}</span>
+                            {% if t.description %}<span class="gb-type__text">{{ t.description|nl2br }}</span>{% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="gb-head">
+                <p class="gb-head__type"><strong>{{ type.title }}</strong> · {{ 'MSC.gb_minutes'|trans([type.duration], 'contao_default') }}{% if type.zoom %} · Zoom{% endif %}</p>
+                {% if change_url %}<a class="gb-link" href="{{ change_url }}">{{ 'MSC.gb_change_type'|trans([], 'contao_default') }}</a>{% endif %}
+            </div>
+            {% if errors.zeit|default %}<p class="gb-error" role="alert">{{ errors.zeit }}</p>{% endif %}
+            {{ gb.picker(picker) }}
+            {% if picker.selected %}
+                <form class="gb-form" method="post" action="#{{ anchor }}" novalidate>
+                    <input type="hidden" name="FORM_SUBMIT" value="{{ form_id }}">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                    <input type="hidden" name="zeit" value="{{ picker.selected }}">
+                    <h3 class="gb-form__title">{{ picker.selected_label.date }}, {{ picker.selected_label.time }}</h3>
+                    {% if errors.form|default %}<p class="gb-error" role="alert">{{ errors.form }}</p>{% endif %}
+                    <div class="gb-form__grid">
+                        {{ gb.field('firstname', 'MSC.gb_firstname'|trans([], 'contao_default'), values, errors, 'text', true, 'autocomplete="given-name"') }}
+                        {{ gb.field('lastname', 'MSC.gb_lastname'|trans([], 'contao_default'), values, errors, 'text', true, 'autocomplete="family-name"') }}
+                        {{ gb.field('email', 'MSC.gb_email_label'|trans([], 'contao_default'), values, errors, 'email', true, 'autocomplete="email"') }}
+                        {{ gb.field('phone', 'MSC.gb_phone'|trans([], 'contao_default'), values, errors, 'tel', false, 'autocomplete="tel"') }}
+                    </div>
+                    {{ gb.field('message', 'MSC.gb_message'|trans([], 'contao_default'), values, errors, 'textarea') }}
+                    <div class="gb-hp" aria-hidden="true"><label for="gb-website">Website</label><input type="text" name="website" id="gb-website" tabindex="-1" autocomplete="off"></div>
+                    <div class="widget widget-checkbox mandatory{{ errors.privacy|default ? ' error' }}">
+                        {% if errors.privacy|default %}<p class="error">{{ errors.privacy }}</p>{% endif %}
+                        <fieldset class="checkbox_container mandatory">
+                            <span><input type="checkbox" name="privacy" id="gb-privacy" class="checkbox" value="1" required> <label for="gb-privacy">{{ privacy|insert_tag_raw|raw }}<span class="mandatory">*</span></label></span>
+                        </fieldset>
+                    </div>
+                    <div class="widget widget-submit">
+                        <button type="submit" class="submit">{{ 'MSC.gb_book'|trans([], 'contao_default') }}</button>
+                    </div>
+                </form>
+            {% elseif not picker.empty and picker.day %}
+                <p class="gb-hint">{{ 'MSC.gb_pick_time'|trans([], 'contao_default') }}</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

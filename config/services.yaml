@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Gratlinie\GratBookingBundle\:
+        resource: ../src/
+        exclude:
+            - ../src/ContaoManager/
+            - ../src/GratlinieGratBookingBundle.php

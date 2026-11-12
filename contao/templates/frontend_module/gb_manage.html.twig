@@ -1,0 +1,59 @@
+{% extends '@Contao/frontend_module/_base.html.twig' %}
+{% import '@Contao/component/_gb_picker.html.twig' as gb %}
+
+{% block content %}
+    {% add 'gratbooking_css' to head %}<link rel="stylesheet" href="{{ asset('css/gratbooking.css', 'gratlinie_grat_booking') }}">{% endadd %}
+    <div class="gb" id="{{ anchor }}">
+        {% if step == 'missing' %}
+            <p class="gb-empty">{{ 'MSC.gb_missing'|trans([], 'contao_default') }}</p>
+        {% else %}
+            {% if notice == 'cancelled' %}<p class="gb-notice" role="status">{{ 'MSC.gb_cancelled_notice'|trans([], 'contao_default') }}</p>{% endif %}
+            {% if notice == 'rescheduled' %}<p class="gb-notice" role="status">{{ 'MSC.gb_rescheduled_notice'|trans([], 'contao_default') }}</p>{% endif %}
+            {% if errors.form|default %}<p class="gb-error" role="alert">{{ errors.form }}</p>{% endif %}
+            <div class="gb-summary{{ booking.status == 'cancelled' ? ' is-cancelled' }}">
+                <p class="gb-summary__type"><strong>{{ booking_type.title }}</strong>{% if booking.status == 'cancelled' %} · {{ 'MSC.gb_status_cancelled'|trans([], 'contao_default') }}{% endif %}</p>
+                <p class="gb-summary__when">{{ when.date }}, {{ when.time }}</p>
+                {% if booking.status == 'confirmed' and booking.zoomJoinUrl %}<p><a class="gb-link" href="{{ booking.zoomJoinUrl }}" target="_blank" rel="noopener">{{ 'MSC.gb_zoom_link'|trans([], 'contao_default') }}</a>{% if booking.zoomPassword %} · {{ 'MSC.gb_zoom_password'|trans([booking.zoomPassword], 'contao_default') }}{% endif %}</p>{% endif %}
+            </div>
+            {% if can_manage %}
+                {% if step == 'reschedule' %}
+                    <h3 class="gb-form__title">{{ 'MSC.gb_reschedule_title'|trans([], 'contao_default') }}</h3>
+                    {% if errors.zeit|default %}<p class="gb-error" role="alert">{{ errors.zeit }}</p>{% endif %}
+                    {{ gb.picker(picker) }}
+                    {% if picker.selected %}
+                        <form class="gb-form" method="post" action="#{{ anchor }}">
+                            <input type="hidden" name="FORM_SUBMIT" value="{{ form_id }}">
+                            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                            <input type="hidden" name="action" value="reschedule">
+                            <input type="hidden" name="zeit" value="{{ picker.selected }}">
+                            <p>{{ 'MSC.gb_reschedule_to'|trans([picker.selected_label.date ~ ', ' ~ picker.selected_label.time], 'contao_default') }}</p>
+                            <div class="widget widget-submit"><button type="submit" class="submit">{{ 'MSC.gb_reschedule_confirm'|trans([], 'contao_default') }}</button></div>
+                        </form>
+                    {% endif %}
+                    <p><a class="gb-link" href="{{ self_url }}">{{ 'MSC.gb_back'|trans([], 'contao_default') }}</a></p>
+                {% else %}
+                    <p class="gb-hint">{{ 'MSC.gb_manage_until'|trans([deadline.date], 'contao_default') }}</p>
+                    {% if confirm_cancel %}
+                        <form method="post" action="#{{ anchor }}" class="gb-confirm">
+                            <input type="hidden" name="FORM_SUBMIT" value="{{ form_id }}">
+                            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                            <input type="hidden" name="action" value="cancel">
+                            <p><strong>{{ 'MSC.gb_cancel_confirm'|trans([], 'contao_default') }}</strong></p>
+                            <div class="gb-actions">
+                                <button type="submit" class="submit">{{ 'MSC.gb_cancel_yes'|trans([], 'contao_default') }}</button>
+                                <a class="gb-link" href="{{ self_url }}">{{ 'MSC.gb_back'|trans([], 'contao_default') }}</a>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="gb-actions">
+                            <a class="gb-button gf-btn gf-btn--primary" href="{{ reschedule_url }}">{{ 'MSC.gb_reschedule'|trans([], 'contao_default') }}</a>
+                            <a class="gb-button gb-button--secondary gf-btn gf-btn--outline" href="{{ cancel_url }}">{{ 'MSC.gb_cancel'|trans([], 'contao_default') }}</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% elseif booking.status == 'confirmed' %}
+                <p class="gb-hint">{{ 'MSC.gb_manage_closed'|trans([calendar.organizerEmail ?: ''], 'contao_default') }}</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
