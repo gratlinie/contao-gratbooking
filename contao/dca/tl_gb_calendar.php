@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_gb_calendar'] = [
             'children',
             'absences' => [
                 'href' => 'table=tl_gb_absence',
-                'icon' => 'calendar.svg',
+                'icon' => 'bundles/gratliniegratbooking/icons/absence.svg',
                 'primary' => true,
             ],
             'delete',
