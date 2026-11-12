@@ -2,9 +2,13 @@
 
 # GratBooking
 
-Termine über die Website buchen – Contao 5.7, PHP ≥ 8.3. Freie Zeiten aus dem Google Kalender, Zoom-Meeting je
-Buchung, Bestätigung mit Kalenderdatei, Erinnerung, Absagen und Umbuchen per Link. Im Stil von
-[GratFrame](https://www.gratframe.de), läuft aber auch ohne (Variablen `--gb-*`, Fallback auf `--gf-*`).
+**Termine aus dem Google Kalender buchen – mit automatisch erzeugtem Zoom-Meeting.** Für Contao 5.7, PHP ≥ 8.3.
+
+Deine Kunden sehen auf der Website nur die Zeiten, die in deinem Google Kalender frei sind, und buchen direkt. Bei
+jeder Buchung legt GratBooking ein Zoom-Meeting an, trägt den Termin samt Zoom-Link in deinen Google Kalender ein und
+schickt die Bestätigung mit Zoom-Link und Kalenderdatei. Verschieben oder absagen per Link – Zoom und Google ziehen
+mit. Ideal für Coachings, Beratungen und Erstgespräche per Video. Im Stil von [GratFrame](https://www.gratframe.de),
+läuft aber auch ohne (Variablen `--gb-*`, Fallback auf `--gf-*`).
 
 ## Funktionen
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 (2026-11-12)
+
+- Beschreibung und Stichwörter: Termine aus dem Google Kalender buchen, mit automatisch erzeugtem Zoom-Meeting
+
 ## 0.1.0 (2026-11-12)
 
 - Erste Version: Kalender mit Google (Dienstkonto, Free/Busy über mehrere Kalender) und Zoom (Server-to-Server-App),

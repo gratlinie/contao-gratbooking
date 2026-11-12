@@ -1,13 +1,18 @@
 {
     "name": "gratlinie/contao-gratbooking",
-    "description": "GratBooking – Termine über die Website buchen: freie Zeiten aus dem Google Kalender, Zoom-Link, Bestätigung, Erinnerung, Absagen und Umbuchen",
+    "description": "GratBooking – Termine aus dem Google Kalender buchen, mit automatisch erzeugtem Zoom-Meeting: Bestätigung mit Kalenderdatei, Erinnerung, Absagen und Umbuchen per Link",
     "keywords": [
         "contao",
-        "termine",
-        "buchung",
-        "booking",
         "google-calendar",
         "zoom",
+        "zoom-meeting",
+        "termine",
+        "terminbuchung",
+        "booking",
+        "appointment-booking",
+        "scheduling",
+        "video-call",
+        "coaching",
         "gratframe"
     ],
     "type": "contao-bundle",
