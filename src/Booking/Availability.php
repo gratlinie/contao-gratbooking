@@ -144,9 +144,12 @@ class Availability
             },
         );
 
+        // Eigene Buchungen blockieren samt ihrem Puffer, damit die Pause nach einem Termin erhalten bleibt
         $own = $this->db->fetchAllAssociative(
-            "SELECT id, start, end FROM tl_gb_booking WHERE calendar = ? AND status IN ('confirmed', 'pending') AND end > ? AND start < ?",
-            [$calendar['id'], $from, $to],
+            "SELECT b.id, b.start, b.end, COALESCE(t.bufferBefore, 0) AS bufferBefore, COALESCE(t.bufferAfter, 0) AS bufferAfter
+             FROM tl_gb_booking b LEFT JOIN tl_gb_type t ON t.id = b.type
+             WHERE b.calendar = ? AND b.status IN ('confirmed', 'pending') AND b.end > ? AND b.start < ?",
+            [$calendar['id'], $from - 86400, $to + 86400],
         );
 
         $exclude = null;
@@ -157,7 +160,7 @@ class Availability
                 continue;
             }
 
-            $busy[] = [(int) $booking['start'], (int) $booking['end']];
+            $busy[] = [(int) $booking['start'] - (int) $booking['bufferBefore'] * 60, (int) $booking['end'] + (int) $booking['bufferAfter'] * 60];
         }
 
         // Beim Umbuchen den eigenen Termin auch aus den Google-Zeiten nehmen (er steht ja dort)
