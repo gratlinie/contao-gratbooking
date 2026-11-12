@@ -102,6 +102,36 @@ class BookingDcaListener
         return $value;
     }
 
+    #[AsCallback(table: 'tl_gb_absence', target: 'fields.endDate.save')]
+    public function saveAbsenceEnd(mixed $value, DataContainer $dc): mixed
+    {
+        $start = (int) ($dc->getCurrentRecord()['startDate'] ?? 0);
+        $submitted = \Contao\Input::post('startDate');
+
+        // Beim Speichern steht das neue Startdatum noch nicht im Datensatz
+        if (null !== $submitted && '' !== $submitted) {
+            try {
+                $start = (int) (new \Contao\Date((string) $submitted, \Contao\Date::getNumericDateFormat()))->tstamp;
+            } catch (\Throwable) {
+            }
+        }
+
+        if ('' !== (string) $value && (int) $value < $start) {
+            throw new \RuntimeException($GLOBALS['TL_LANG']['tl_gb_absence']['endBeforeStart']);
+        }
+
+        return $value;
+    }
+
+    #[AsCallback(table: 'tl_gb_absence', target: 'list.sorting.child_record')]
+    public function absenceRecord(array $row): string
+    {
+        $from = date('d.m.Y', (int) $row['startDate']);
+        $to = date('d.m.Y', (int) $row['endDate']);
+
+        return \sprintf('<strong>%s</strong>%s', $from === $to ? $from : $from.' – '.$to, $row['title'] ? ' <span style="color:#999">'.StringUtil::specialchars($row['title']).'</span>' : '');
+    }
+
     #[AsCallback(table: 'tl_gb_type', target: 'fields.alias.save')]
     public function saveAlias(string $value, DataContainer $dc): string
     {

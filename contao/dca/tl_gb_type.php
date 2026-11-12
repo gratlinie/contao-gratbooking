@@ -110,37 +110,37 @@ $GLOBALS['TL_DCA']['tl_gb_type'] = [
         ],
         'hoursMo' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursTu' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursWe' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursTh' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursFr' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursSa' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'hoursSu' => [
             'inputType' => 'text',
-            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '09:00-12:00, 14:00-18:00'],
+            'eval' => ['maxlength' => 128, 'tl_class' => 'w50', 'placeholder' => '– nicht buchbar –'],
             'sql' => "varchar(128) NOT NULL default ''",
         ],
         'zoom' => [

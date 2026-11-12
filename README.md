@@ -11,8 +11,11 @@ Buchung, Bestätigung mit Kalenderdatei, Erinnerung, Absagen und Umbuchen per Li
   Google-Schlüssel wird nach dem Speichern nicht mehr angezeigt. Beim Speichern werden beide Verbindungen geprüft.
 - **Terminarten** je Kalender: Dauer, Raster der Anfangszeiten, Puffer davor/danach, Vorlauf, Horizont, Höchstzahl pro
   Tag, buchbare Zeiten je Wochentag („09:00-12:00, 14:00-18:00“), Zoom ja/nein oder ein Ort.
-- **Freie Termine** = Wochenzeiten minus belegte Zeiten aller angegebenen Google-Kalender (Free/Busy, Details bleiben
-  privat) minus eigene Buchungen. Urlaub und andere Termine einfach in Google eintragen.
+- **Abwesenheiten** je Kalender (Urlaub, Fortbildung …): Von–Bis per Datumsauswahl, an diesen Tagen bietet keine
+  Terminart Termine an; bestehende Buchungen bleiben.
+- **Freie Termine** = Wochenzeiten minus Abwesenheiten minus belegte Zeiten aller angegebenen Google-Kalender
+  (Free/Busy, Details bleiben privat) minus eigene Buchungen samt Puffer. Achtung: Ganztägige Termine legt Google
+  standardmäßig als „Verfügbar“ an – die blockieren nur, wenn sie auf „Beschäftigt“ stehen.
 - **Buchen** (Modul *Termin buchen*): Terminart → Monat → Uhrzeit → Kontaktdaten. Vor dem Speichern wird der Termin
   frisch gegen Google geprüft und der Kalender gesperrt (keine Doppelbuchung). Dann Zoom-Meeting, Eintrag im
   Google Kalender (mit Kontaktdaten und Zoom-Link), Mails. Scheitert ein Schritt, wird zurückgerollt.

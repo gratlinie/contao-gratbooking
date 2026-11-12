@@ -52,7 +52,7 @@ class Availability
             return [];
         }
 
-        $candidates = $this->candidates($type, $tz, $from, $to);
+        $candidates = $this->candidates($type, $tz, $from, $to, $this->absentDays($calendar, $from, $to));
 
         if ([] === $candidates) {
             return [];
@@ -92,7 +92,33 @@ class Availability
     /**
      * @return list<array{start: int, end: int}>
      */
-    private function candidates(array $type, \DateTimeZone $tz, int $from, int $to): array
+    /**
+     * Tage der Abwesenheiten (Urlaub) als „Y-m-d“. Contao speichert Datumsfelder als Mitternacht in der Zeitzone
+     * der Installation, deshalb mit date() lesen.
+     *
+     * @return array<string, true>
+     */
+    private function absentDays(array $calendar, int $from, int $to): array
+    {
+        $days = [];
+        $rows = $this->db->fetchAllAssociative('SELECT startDate, endDate FROM tl_gb_absence WHERE pid = ? AND endDate >= ? AND startDate <= ?', [$calendar['id'], $from - 86400, $to + 86400]);
+
+        foreach ($rows as $row) {
+            $day = new \DateTimeImmutable(date('Y-m-d', (int) $row['startDate']));
+            $last = new \DateTimeImmutable(date('Y-m-d', max((int) $row['startDate'], (int) $row['endDate'])));
+
+            for (; $day <= $last; $day = $day->modify('+1 day')) {
+                $days[$day->format('Y-m-d')] = true;
+            }
+        }
+
+        return $days;
+    }
+
+    /**
+     * @param array<string, true> $absent
+     */
+    private function candidates(array $type, \DateTimeZone $tz, int $from, int $to, array $absent = []): array
     {
         $duration = (int) $type['duration'] * 60;
         $step = max(5, (int) $type['slotStep']) * 60;
@@ -101,6 +127,10 @@ class Availability
         $last = (new \DateTimeImmutable('@'.$to))->setTimezone($tz)->setTime(0, 0);
 
         for (; $day <= $last; $day = $day->modify('+1 day')) {
+            if (isset($absent[$day->format('Y-m-d')])) {
+                continue;
+            }
+
             foreach (explode(',', (string) $type['hours'.self::DAYS[(int) $day->format('N') - 1]]) as $range) {
                 if (null === ($minutes = self::parseRange($range))) {
                     continue;

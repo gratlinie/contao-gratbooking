@@ -30,6 +30,7 @@ $L['calendarMissing'] = 'Key saved. Now share the calendar in Google with %s (â€
 $L['new'] = ['New calendar', 'Create a new calendar'];
 $L['edit'] = ['Edit', 'Edit calendar ID %s'];
 $L['children'] = ['Appointment types', 'Appointment types of calendar ID %s'];
+$L['absences'] = ['Absences', 'Vacations and other absences of calendar ID %s'];
 $L['delete'] = ['Delete', 'Delete calendar ID %s'];
 $L['toggle'] = ['Publish', 'Publish/unpublish calendar ID %s'];
 $L['show'] = ['Details', 'Show the details of calendar ID %s'];

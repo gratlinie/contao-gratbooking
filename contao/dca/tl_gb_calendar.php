@@ -13,7 +13,7 @@ use Contao\DC_Table;
 $GLOBALS['TL_DCA']['tl_gb_calendar'] = [
     'config' => [
         'dataContainer' => DC_Table::class,
-        'ctable' => ['tl_gb_type'],
+        'ctable' => ['tl_gb_type', 'tl_gb_absence'],
         'switchToEdit' => true,
         'sql' => [
             'keys' => [
@@ -35,6 +35,11 @@ $GLOBALS['TL_DCA']['tl_gb_calendar'] = [
         'operations' => [
             'edit',
             'children',
+            'absences' => [
+                'href' => 'table=tl_gb_absence',
+                'icon' => 'calendar.svg',
+                'primary' => true,
+            ],
             'delete',
             'toggle',
             'show',

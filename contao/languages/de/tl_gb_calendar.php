@@ -30,6 +30,7 @@ $L['calendarMissing'] = 'Schlüssel gespeichert. Jetzt den Kalender in Google f�
 $L['new'] = ['Neuer Kalender', 'Neuen Kalender anlegen'];
 $L['edit'] = ['Bearbeiten', 'Kalender ID %s bearbeiten'];
 $L['children'] = ['Terminarten', 'Terminarten des Kalenders ID %s'];
+$L['absences'] = ['Abwesenheiten', 'Urlaub und andere Abwesenheiten des Kalenders ID %s'];
 $L['delete'] = ['Löschen', 'Kalender ID %s löschen'];
 $L['toggle'] = ['Veröffentlichen', 'Kalender ID %s veröffentlichen/unveröffentlichen'];
 $L['show'] = ['Details', 'Details des Kalenders ID %s'];
