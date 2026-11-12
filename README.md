@@ -24,8 +24,9 @@ Buchung, Bestätigung mit Kalenderdatei, Erinnerung, Absagen und Umbuchen per Li
 - **Mails** (Notification Center, Typen *Termin gebucht*, *verschoben*, *abgesagt*, *Erinnerung*): Tokens zu Termin,
   Kontakt, Zoom und Verwaltungs-Link; Kalenderdatei als Anhang (`##booking_ics##` in „Anhänge über Tokens“, gleiche UID
   bei Änderungen, `METHOD:CANCEL` bei Absage).
-- **Ohne JavaScript**: Die Auswahl läuft über Links, das Formular ist ein normales Formular. Antworten werden nie
-  zwischengespeichert.
+- **Blättern ohne Neuladen**: `gratbooking.js` lädt beim Klick auf Monat, Tag, Uhrzeit, Verschieben oder Absagen nur den
+  Buchungsbereich nach und führt die Adresse mit (Zurück/Neuladen funktionieren). Ohne JavaScript sind es normale
+  Links, das Formular ist ein normales Formular. Antworten werden nie zwischengespeichert.
 
 ## Google einrichten (je Kunde)
 

@@ -3,6 +3,7 @@
 
 {% block content %}
     {% add 'gratbooking_css' to head %}<link rel="stylesheet" href="{{ asset('css/gratbooking.css', 'gratlinie_grat_booking') }}">{% endadd %}
+    {% add 'gratbooking_js' to body %}<script src="{{ asset('js/gratbooking.js', 'gratlinie_grat_booking') }}" defer></script>{% endadd %}
     <div class="gb" id="{{ anchor }}">
         {% if step == 'done' %}
             <div class="gb-done" role="status">
