@@ -7,4 +7,5 @@ services:
         resource: ../src/
         exclude:
             - ../src/ContaoManager/
+            - ../src/Payment/
             - ../src/GratlinieGratBookingBundle.php

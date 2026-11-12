@@ -70,7 +70,26 @@ Erinnerungen verschickt der Contao-Cron (alle 15 Minuten). Zuverlässig mit eine
 `GRATBOOKING_GOOGLE_URL` und `GRATBOOKING_ZOOM_URL` ersetzen die Basis-URLs der APIs (Mock-Server); die Anmeldung bei
 Google läuft über `token_uri` aus dem JSON-Schlüssel.
 
-## Geplant
+## Bezahlte Termine (optional, mit GratShop)
 
-Termine gegen Bezahlung über [GratShop](https://github.com/gratlinie/contao-gratshop) (Stripe Checkout): Slot
-reservieren (Status *wartet auf Zahlung*), nach der Zahlung Zoom, Google und Bestätigung.
+Ist **GratShop** (`gratlinie/contao-gratshop`, Stripe Checkout) installiert, bekommt jede Terminart das Feld
+**Preis (GratShop-Produkt)**: ein Produkt vom Typ *Direktkauf* mit Nettopreis. Ohne GratShop bleibt alles kostenlos,
+GratBooking braucht es nicht.
+
+- **Buchen:** Das Modul zeigt den Bruttopreis (Steuersatz aus `gratlinie_grat_shop.vat_rate`), fragt zusätzlich die
+  Zustimmung zum Beginn vor Ablauf der Widerrufsfrist ab (Dienstleistung, § 356 Abs. 4 BGB; Text und Seite der
+  Widerrufsbelehrung im Modul) und leitet zu Stripe weiter. Der Termin ist so lange **reserviert** (Status *wartet auf
+  Zahlung*, 32 Minuten), die Checkout-Session endet eine Minute früher.
+- **Nach der Zahlung** (Rückkehr von Stripe oder Webhook, je Session nur einmal): Zoom-Meeting, Google-Eintrag,
+  Bestätigung mit `##booking_amount##`. Wer abbricht, landet wieder im Kalender mit vorausgewähltem Termin; die
+  Reservierung wird frei und die Stripe-Session geschlossen. Abgelaufene Reservierungen blockieren nichts, der
+  stündliche Cron setzt sie auf *abgesagt*.
+- **Verwalten:** Bezahlte Termine lassen sich online nur **verschieben**. Absagen und erstatten regelt der Gastgeber
+  (Backend „Absagen“ löscht Zoom und Google, die Erstattung läuft im Stripe-Dashboard).
+- **Zahlarten** stellt man im Stripe-Dashboard ein (Checkout nutzt die dort aktiven). **PayPal**: *Einstellungen →
+  Zahlungsmethoden → PayPal* aktivieren und das PayPal-Geschäftskonto verbinden; bei der Auszahlung lässt sich wählen,
+  ob das Geld im Stripe-Guthaben oder auf dem PayPal-Konto landet. Nur sofortige Zahlarten verwenden (keine
+  SEPA-Lastschrift): eine Zahlung, die erst Tage später bestätigt wird, bestätigt den Termin auch dann, wenn er
+  inzwischen anderweitig vergeben ist.
+- Einrichtung von Stripe (Schlüssel in `.env.local`, Webhook `/_gratshop/stripe/webhook`): siehe GratShop. Kunden
+  werden als Mitglieder angelegt, die Bestellung steht in GratShop.

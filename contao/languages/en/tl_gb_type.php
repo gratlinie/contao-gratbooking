@@ -23,6 +23,9 @@ foreach (['Mo' => 'Monday', 'Tu' => 'Tuesday', 'We' => 'Wednesday', 'Th' => 'Thu
 }
 $L['zoom'] = ['Create a Zoom meeting', 'Create a meeting for every booking; the link is in confirmation, reminder and calendar.'];
 $L['location'] = ['Location without Zoom', 'E.g. “Phone” or an address.'];
+$L['payment_legend'] = 'Payment';
+$L['shopProduct'] = ['Price (GratShop product)', 'Product of the type “direct purchase”; empty = free. The appointment is booked once paid and reserved for 30 minutes until then. Paid appointments can only be rescheduled online.'];
+$L['free'] = '– free –';
 $L['published'] = ['Publish', 'Offer in the booking module.'];
 $L['hoursInvalid'] = 'Invalid time windows: %s – please use “09:00-12:00, 14:00-18:00”.';
 $L['new'] = ['New type', 'Create a new appointment type'];

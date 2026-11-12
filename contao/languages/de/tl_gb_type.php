@@ -24,6 +24,9 @@ foreach (['Mo' => 'Montag', 'Tu' => 'Dienstag', 'We' => 'Mittwoch', 'Th' => 'Don
 $L['zoom'] = ['Zoom-Meeting anlegen', 'Bei jeder Buchung ein Meeting erzeugen; der Link steht in Bestätigung, Erinnerung und Kalender.'];
 $L['location'] = ['Ort ohne Zoom', 'Z. B. „Telefon“ oder eine Adresse.'];
 $L['published'] = ['Veröffentlichen', 'Im Buchungsmodul anbieten.'];
+$L['payment_legend'] = 'Bezahlung';
+$L['shopProduct'] = ['Preis (GratShop-Produkt)', 'Produkt vom Typ „Direktkauf“; leer = kostenlos. Gebucht ist der Termin erst nach der Zahlung, bis dahin ist er 30 Minuten reserviert. Bezahlte Termine lassen sich online nur verschieben.'];
+$L['free'] = '– kostenlos –';
 $L['hoursInvalid'] = 'Ungültige Zeitfenster: %s – bitte wie „09:00-12:00, 14:00-18:00“ angeben.';
 $L['new'] = ['Neue Terminart', 'Neue Terminart anlegen'];
 $L['edit'] = ['Bearbeiten', 'Terminart ID %s bearbeiten'];

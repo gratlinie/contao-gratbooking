@@ -17,6 +17,7 @@ $GLOBALS['TL_LANG']['nc_tokens']['gratbooking'] = [
     'booking_message' => 'Message from the form',
     'booking_location' => '“Zoom” or the location of the type',
     'booking_ics' => 'Calendar file (.ics) – enter as attachment token',
+    'booking_amount' => 'Amount paid, e.g. “2,499.00 €” (empty for free appointments)',
     'zoom_url' => 'Zoom meeting link',
     'zoom_password' => 'Zoom meeting passcode',
     'manage_url' => 'Link to cancel/move',

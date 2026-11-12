@@ -17,6 +17,7 @@ $GLOBALS['TL_LANG']['nc_tokens']['gratbooking'] = [
     'booking_message' => 'Nachricht aus dem Formular',
     'booking_location' => '„Zoom“ oder der Ort der Terminart',
     'booking_ics' => 'Kalenderdatei (.ics) – als „Anhänge über Tokens“ eintragen',
+    'booking_amount' => 'Bezahlter Betrag, z. B. „2.499,00 €“ (leer bei kostenlosen Terminen)',
     'zoom_url' => 'Link zum Zoom-Meeting',
     'zoom_password' => 'Kenncode des Zoom-Meetings',
     'manage_url' => 'Link zum Absagen/Verschieben',

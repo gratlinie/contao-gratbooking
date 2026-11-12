@@ -9,8 +9,16 @@
             <div class="gb-done" role="status">
                 <h2 class="gb-done__title">{{ 'MSC.gb_done_title'|trans([], 'contao_default') }}</h2>
                 <p class="gb-done__when"><strong>{{ booking_type.title }}</strong><br>{{ when.date }}, {{ when.time }}</p>
+                {% if amount %}<p class="gb-done__paid">{{ 'MSC.gb_paid'|trans([amount], 'contao_default') }}</p>{% endif %}
                 <p>{{ 'MSC.gb_done_text'|trans([booking.email], 'contao_default') }}</p>
                 {% if booking.zoomJoinUrl %}<p><a class="gb-link" href="{{ booking.zoomJoinUrl }}" target="_blank" rel="noopener">{{ 'MSC.gb_zoom_link'|trans([], 'contao_default') }}</a></p>{% endif %}
+            </div>
+        {% elseif step == 'waiting' %}
+            <div class="gb-done" role="status">
+                <h2 class="gb-done__title">{{ 'MSC.gb_waiting_title'|trans([], 'contao_default') }}</h2>
+                <p class="gb-done__when"><strong>{{ booking_type.title }}</strong><br>{{ when.date }}, {{ when.time }}</p>
+                <p>{{ 'MSC.gb_waiting_text'|trans([booking.email], 'contao_default') }}</p>
+                <p><a class="gb-link" href="{{ reload_url }}">{{ 'MSC.gb_waiting_reload'|trans([], 'contao_default') }}</a></p>
             </div>
         {% elseif step == 'unavailable' %}
             <p class="gb-empty">{{ 'MSC.gb_unavailable'|trans([], 'contao_default') }}</p>
@@ -28,9 +36,10 @@
             </ul>
         {% else %}
             <div class="gb-head">
-                <p class="gb-head__type gb-meta"><strong>{{ gb_type.title }}</strong><span class="gb-sep" aria-hidden="true"></span><span>{{ 'MSC.gb_minutes'|trans([gb_type.duration], 'contao_default') }}</span>{% if gb_type.zoom %}<span class="gb-sep" aria-hidden="true"></span><span>Zoom</span>{% endif %}</p>
+                <p class="gb-head__type gb-meta"><strong>{{ gb_type.title }}</strong><span class="gb-sep" aria-hidden="true"></span><span>{{ 'MSC.gb_minutes'|trans([gb_type.duration], 'contao_default') }}</span>{% if gb_type.zoom %}<span class="gb-sep" aria-hidden="true"></span><span>Zoom</span>{% endif %}{% if price %}<span class="gb-sep" aria-hidden="true"></span><span>{{ 'MSC.gb_price'|trans([price], 'contao_default') }}</span>{% endif %}</p>
                 {% if change_url %}<a class="gb-link" href="{{ change_url }}">{{ 'MSC.gb_change_type'|trans([], 'contao_default') }}</a>{% endif %}
             </div>
+            {% if notice == 'aborted' %}<p class="gb-notice" role="status">{{ 'MSC.gb_aborted_notice'|trans([], 'contao_default') }}</p>{% endif %}
             {% if errors.zeit|default %}<p class="gb-error" role="alert">{{ errors.zeit }}</p>{% endif %}
             {{ gb.picker(picker) }}
             {% if picker.selected %}
@@ -54,8 +63,17 @@
                             <span><input type="checkbox" name="privacy" id="gb-privacy" class="checkbox" value="1" required> <label for="gb-privacy">{{ privacy|insert_tag_raw|raw }}<span class="mandatory">*</span></label></span>
                         </fieldset>
                     </div>
+                    {% if consent %}
+                        <div class="widget widget-checkbox mandatory{{ errors.consent|default ? ' error' }}">
+                            {% if errors.consent|default %}<p class="error">{{ errors.consent }}</p>{% endif %}
+                            <fieldset class="checkbox_container mandatory">
+                                <span><input type="checkbox" name="consent" id="gb-consent" class="checkbox" value="1" required> <label for="gb-consent">{{ consent|insert_tag_raw|raw }}<span class="mandatory">*</span></label></span>
+                            </fieldset>
+                        </div>
+                        <p class="gb-hint gb-pay-hint">{{ 'MSC.gb_pay_hint'|trans([price, reserve_minutes], 'contao_default') }}</p>
+                    {% endif %}
                     <div class="widget widget-submit">
-                        <button type="submit" class="submit">{{ 'MSC.gb_book'|trans([], 'contao_default') }}</button>
+                        <button type="submit" class="submit">{{ (price ? 'MSC.gb_book_pay' : 'MSC.gb_book')|trans([], 'contao_default') }}</button>
                     </div>
                 </form>
             {% elseif not picker.empty and picker.day %}

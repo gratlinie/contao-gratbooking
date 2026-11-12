@@ -120,6 +120,7 @@ class Notifier
             'booking_phone' => $booking['phone'],
             'booking_message' => (string) $booking['message'],
             'booking_location' => $booking['zoomJoinUrl'] ? 'Zoom' : ($bookingType['location'] ?? ''),
+            'booking_amount' => (float) ($booking['amount'] ?? 0) > 0 ? number_format((float) $booking['amount'], 2, ',', '.').' €' : '',
             'zoom_url' => (string) $booking['zoomJoinUrl'],
             'zoom_password' => (string) $booking['zoomPassword'],
             'manage_url' => $manage,

@@ -18,5 +18,10 @@ class GratlinieGratBookingBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import('../config/services.yaml');
+
+        // Bezahlte Termine nur mit GratShop
+        if (class_exists(\Gratlinie\GratShopBundle\GratlinieGratShopBundle::class)) {
+            $container->import('../config/payment.yaml');
+        }
     }
 }

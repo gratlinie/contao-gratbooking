@@ -18,7 +18,7 @@ abstract class AbstractBookingNotificationType implements NotificationTypeInterf
 {
     public const TEXT_TOKENS = [
         'booking_id', 'booking_type', 'booking_date', 'booking_time', 'booking_start', 'booking_end', 'booking_duration',
-        'booking_firstname', 'booking_lastname', 'booking_phone', 'booking_message', 'booking_location',
+        'booking_firstname', 'booking_lastname', 'booking_phone', 'booking_message', 'booking_location', 'booking_amount',
         'zoom_url', 'zoom_password', 'manage_url', 'cancel_deadline', 'previous_date', 'previous_time',
         'organizer_name', 'calendar_title', 'backend_url',
     ];

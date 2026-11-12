@@ -19,7 +19,8 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * Buchung verwalten über den Link aus der Bestätigung (?token=…): Termin ansehen, absagen oder umbuchen – bis
- * zur Frist des Kalenders. Diese Seite als „Seite zum Verwalten“ im Kalender wählen.
+ * zur Frist des Kalenders. Bezahlte Termine lassen sich nur umbuchen. Diese Seite als „Seite zum Verwalten“ im
+ * Kalender wählen.
  */
 #[AsFrontendModule('gb_manage', category: 'gratbooking')]
 class ManageController extends AbstractBookingController
@@ -54,7 +55,7 @@ class ManageController extends AbstractBookingController
 
         if (BookingService::canManage($booking, $calendar) && $request->isMethod('POST') && $formId === $request->request->get('FORM_SUBMIT')) {
             try {
-                if ('cancel' === $request->request->get('action')) {
+                if ('cancel' === $request->request->get('action') && BookingService::canCancel($booking, $calendar)) {
                     $this->bookings->cancel($booking, $calendar);
 
                     throw new RedirectResponseException($base.'?'.http_build_query(['token' => $token, 'abgesagt' => 1]).'#'.$anchor, 303);
@@ -79,6 +80,7 @@ class ManageController extends AbstractBookingController
         $template->set('when', Notifier::format((int) $booking['start'], (int) $booking['end'], $calendar['timezone']));
         $template->set('deadline', Notifier::format((int) $booking['start'] - (int) $calendar['cancelHours'] * 3600, (int) $booking['start'], $calendar['timezone']));
         $template->set('can_manage', BookingService::canManage($booking, $calendar));
+        $template->set('can_cancel', BookingService::canCancel($booking, $calendar));
         $template->set('notice', $request->query->get('abgesagt') ? 'cancelled' : ($request->query->get('umgebucht') ? 'rescheduled' : null));
         $template->set('form_id', $formId);
         $template->set('errors', $errors);

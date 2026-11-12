@@ -159,5 +159,18 @@ $GLOBALS['TL_DCA']['tl_gb_type'] = [
             'eval' => ['doNotCopy' => true],
             'sql' => ['type' => 'boolean', 'default' => false],
         ],
+        // Preis über ein Produkt aus GratShop (Direktkauf); Feld nur mit GratShop sichtbar, siehe unten
+        'shopProduct' => [
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
     ],
 ];
+
+if (class_exists(\Gratlinie\GratShopBundle\GratlinieGratShopBundle::class)) {
+    $GLOBALS['TL_DCA']['tl_gb_type']['palettes']['default'] = str_replace(';{publish_legend}', ';{payment_legend},shopProduct;{publish_legend}', $GLOBALS['TL_DCA']['tl_gb_type']['palettes']['default']);
+    $GLOBALS['TL_DCA']['tl_gb_type']['fields']['shopProduct'] += [
+        'inputType' => 'select',
+        'options_callback' => static fn (): array => Contao\System::getContainer()->get('database_connection')->fetchAllKeyValue("SELECT id, CONCAT(title, ' – ', FORMAT(priceNet, 2, 'de_DE'), ' € netto') FROM tl_gs_product WHERE type = 'checkout' ORDER BY title"),
+        'eval' => ['includeBlankOption' => true, 'blankOptionLabel' => &$GLOBALS['TL_LANG']['tl_gb_type']['free'], 'chosen' => true, 'tl_class' => 'w50'],
+    ];
+}

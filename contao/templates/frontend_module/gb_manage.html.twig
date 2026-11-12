@@ -33,8 +33,8 @@
                     {% endif %}
                     <p><a class="gb-link" href="{{ self_url }}">{{ 'MSC.gb_back'|trans([], 'contao_default') }}</a></p>
                 {% else %}
-                    <p class="gb-hint">{{ 'MSC.gb_manage_until'|trans([deadline.date], 'contao_default') }}</p>
-                    {% if confirm_cancel %}
+                    <p class="gb-hint">{{ (can_cancel ? 'MSC.gb_manage_until' : 'MSC.gb_manage_until_paid')|trans([deadline.date, calendar.organizerEmail ?: ''], 'contao_default') }}</p>
+                    {% if confirm_cancel and can_cancel %}
                         <form method="post" action="#{{ anchor }}" class="gb-confirm">
                             <input type="hidden" name="FORM_SUBMIT" value="{{ form_id }}">
                             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
@@ -48,7 +48,7 @@
                     {% else %}
                         <div class="gb-actions">
                             <a class="gb-button gf-btn gf-btn--primary" href="{{ reschedule_url }}">{{ 'MSC.gb_reschedule'|trans([], 'contao_default') }}</a>
-                            <a class="gb-button gb-button--secondary gf-btn gf-btn--outline" href="{{ cancel_url }}">{{ 'MSC.gb_cancel'|trans([], 'contao_default') }}</a>
+                            {% if can_cancel %}<a class="gb-button gb-button--secondary gf-btn gf-btn--outline" href="{{ cancel_url }}">{{ 'MSC.gb_cancel'|trans([], 'contao_default') }}</a>{% endif %}
                         </div>
                     {% endif %}
                 {% endif %}

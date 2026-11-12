@@ -19,6 +19,9 @@ use Psr\Log\LoggerInterface;
  * Buchen, Umbuchen, Absagen. Während einer Buchung ist der Kalender gesperrt (MySQL-Lock), der Termin wird frisch
  * gegen Google geprüft. Reihenfolge: Zoom-Meeting → Google-Eintrag → Buchung speichern → Mails; scheitert ein
  * Schritt, werden die vorherigen zurückgenommen.
+ *
+ * Bezahlte Termine (GratShop): reserve() hält den Termin ohne Zoom, Google und Mails frei, bis die Zahlung läuft;
+ * confirmPayment() holt nach der Zahlung alles nach, release() gibt eine abgebrochene Reservierung frei.
  */
 class BookingService
 {
@@ -46,40 +49,13 @@ class BookingService
                 throw new SlotTakenException();
             }
 
-            $end = $start + (int) $type['duration'] * 60;
-            $booking = [
-                'tstamp' => time(),
-                'calendar' => $calendar['id'],
-                'type' => $type['id'],
-                'start' => $start,
-                'end' => $end,
-                'status' => 'confirmed',
-                'token' => bin2hex(random_bytes(24)),
-                'createdAt' => time(),
-                'privacyAt' => time(),
-                'sequence' => 0,
-                'zoomJoinUrl' => '',
-                'zoomPassword' => '',
-                'zoomMeetingId' => '',
-                'googleEventId' => '',
-                ...$contact,
-            ];
-
-            $meeting = null;
+            $booking = $this->provision($this->newBooking($type, $calendar, $start, $contact, 'confirmed'), $type, $calendar);
 
             try {
-                if ($type['zoom']) {
-                    $meeting = $this->zoom->create($calendar, $type['title'].': '.$contact['firstname'].' '.$contact['lastname'], $start, (int) $type['duration'], $calendar['timezone']);
-                    $booking['zoomMeetingId'] = $meeting['id'];
-                    $booking['zoomJoinUrl'] = $meeting['join_url'];
-                    $booking['zoomPassword'] = $meeting['password'];
-                }
-
-                $booking['googleEventId'] = $this->google->insertEvent($calendar['googleCredentials'], $calendar['googleCalendarId'], $this->event($booking, $type, $calendar));
                 $this->db->insert('tl_gb_booking', $booking);
                 $booking['id'] = (int) $this->db->lastInsertId();
             } catch (\Throwable $exception) {
-                $this->rollback($calendar, $booking, $meeting);
+                $this->rollback($calendar, $booking);
 
                 throw $exception;
             }
@@ -89,6 +65,85 @@ class BookingService
 
             return $booking;
         });
+    }
+
+    /**
+     * Hält einen bezahlten Termin frei, solange die Zahlung läuft (Status „wartet auf Zahlung“ bis $expiresAt).
+     *
+     * @throws SlotTakenException wenn der Termin inzwischen vergeben ist
+     */
+    public function reserve(array $type, array $calendar, int $start, array $contact, int $expiresAt): array
+    {
+        return $this->locked($calendar, function () use ($type, $calendar, $start, $contact, $expiresAt): array {
+            if (!$this->availability->isFree($type, $calendar, $start)) {
+                throw new SlotTakenException();
+            }
+
+            $booking = $this->newBooking($type, $calendar, $start, $contact, 'pending') + ['expiresAt' => $expiresAt];
+            $this->db->insert('tl_gb_booking', $booking);
+            $booking['id'] = (int) $this->db->lastInsertId();
+            $this->cacheTagManager->invalidateTags(['contao.db.tl_gb_booking']);
+
+            return $booking;
+        });
+    }
+
+    public function setCheckout(array $booking, string $checkoutId): void
+    {
+        $this->db->update('tl_gb_booking', ['shopCheckout' => $checkoutId, 'tstamp' => time()], ['id' => $booking['id']]);
+    }
+
+    /**
+     * Nach der Zahlung: Zoom-Meeting, Google-Eintrag, Status „gebucht“, Bestätigung. Läuft je Buchung nur einmal.
+     * Bezahlt ist bezahlt – der Termin wird auch bestätigt, wenn die Reservierung schon abgelaufen war.
+     *
+     * @throws ApiException wenn Google oder Zoom scheitern (GratShop nimmt dann die Bestellung zurück, Stripe meldet die
+     *                      Zahlung erneut)
+     */
+    public function confirmPayment(array $booking, int $order, float $amount): array
+    {
+        $calendar = $this->db->fetchAssociative('SELECT * FROM tl_gb_calendar WHERE id = ?', [$booking['calendar']]);
+        $type = $this->db->fetchAssociative('SELECT * FROM tl_gb_type WHERE id = ?', [$booking['type']]);
+
+        if (false === $calendar || false === $type) {
+            throw new \RuntimeException(\sprintf('Kalender oder Terminart der Buchung ID %d fehlt.', $booking['id']));
+        }
+
+        return $this->locked($calendar, function () use ($booking, $type, $calendar, $order, $amount): array {
+            $booking = $this->db->fetchAssociative('SELECT * FROM tl_gb_booking WHERE id = ?', [$booking['id']]) ?: $booking;
+
+            if ('confirmed' === $booking['status']) {
+                return $booking;
+            }
+
+            $booking = $this->provision([...$booking, 'status' => 'confirmed', 'shopOrder' => $order, 'amount' => $amount, 'cancelledAt' => 0], $type, $calendar);
+
+            try {
+                $this->db->update('tl_gb_booking', array_intersect_key($booking, array_flip(['status', 'shopOrder', 'amount', 'cancelledAt', 'zoomJoinUrl', 'zoomPassword', 'zoomMeetingId', 'googleEventId'])) + ['tstamp' => time()], ['id' => $booking['id']]);
+            } catch (\Throwable $exception) {
+                $this->rollback($calendar, $booking);
+
+                throw $exception;
+            }
+
+            $this->notifier->send(BookedNotificationType::NAME, $booking);
+            $this->cacheTagManager->invalidateTags(['contao.db.tl_gb_booking']);
+
+            return $booking;
+        });
+    }
+
+    /**
+     * Gibt eine Reservierung frei, deren Zahlung abgebrochen wurde (ohne Mails, Zoom und Google gibt es noch nicht).
+     */
+    public function release(array $booking): void
+    {
+        if ('pending' !== $booking['status']) {
+            return;
+        }
+
+        $this->db->executeStatement("UPDATE tl_gb_booking SET status = 'cancelled', cancelledAt = ?, tstamp = ? WHERE id = ? AND status = 'pending'", [time(), time(), $booking['id']]);
+        $this->cacheTagManager->invalidateTags(['contao.db.tl_gb_booking']);
     }
 
     public function reschedule(array $booking, array $type, array $calendar, int $start): array
@@ -159,6 +214,58 @@ class BookingService
         return 'confirmed' === $booking['status'] && (int) $booking['start'] - (int) $calendar['cancelHours'] * 3600 > time();
     }
 
+    /**
+     * Bezahlte Termine lassen sich online nur verschieben; absagen (und erstatten) regelt der Gastgeber.
+     */
+    public static function canCancel(array $booking, array $calendar): bool
+    {
+        return self::canManage($booking, $calendar) && 0 === (int) ($booking['shopOrder'] ?? 0);
+    }
+
+    private function newBooking(array $type, array $calendar, int $start, array $contact, string $status): array
+    {
+        return [
+            'tstamp' => time(),
+            'calendar' => $calendar['id'],
+            'type' => $type['id'],
+            'start' => $start,
+            'end' => $start + (int) $type['duration'] * 60,
+            'status' => $status,
+            'token' => bin2hex(random_bytes(24)),
+            'createdAt' => time(),
+            'privacyAt' => time(),
+            'sequence' => 0,
+            'zoomJoinUrl' => '',
+            'zoomPassword' => '',
+            'zoomMeetingId' => '',
+            'googleEventId' => '',
+            ...$contact,
+        ];
+    }
+
+    /**
+     * Legt Zoom-Meeting (falls gewünscht) und Google-Eintrag an; scheitert ein Schritt, wird der vorige zurückgenommen.
+     */
+    private function provision(array $booking, array $type, array $calendar): array
+    {
+        try {
+            if ($type['zoom']) {
+                $meeting = $this->zoom->create($calendar, $type['title'].': '.$booking['firstname'].' '.$booking['lastname'], (int) $booking['start'], (int) $type['duration'], $calendar['timezone']);
+                $booking['zoomMeetingId'] = $meeting['id'];
+                $booking['zoomJoinUrl'] = $meeting['join_url'];
+                $booking['zoomPassword'] = $meeting['password'];
+            }
+
+            $booking['googleEventId'] = $this->google->insertEvent($calendar['googleCredentials'], $calendar['googleCalendarId'], $this->event($booking, $type, $calendar));
+        } catch (\Throwable $exception) {
+            $this->rollback($calendar, $booking);
+
+            throw $exception;
+        }
+
+        return $booking;
+    }
+
     private function event(array $booking, array $type, array $calendar): array
     {
         $description = implode("\n", array_filter([
@@ -179,11 +286,11 @@ class BookingService
         ];
     }
 
-    private function rollback(array $calendar, array $booking, array|null $meeting): void
+    private function rollback(array $calendar, array $booking): void
     {
         try {
-            if (null !== $meeting) {
-                $this->zoom->delete($calendar, $meeting['id']);
+            if ($booking['zoomMeetingId']) {
+                $this->zoom->delete($calendar, $booking['zoomMeetingId']);
             }
 
             if ($booking['googleEventId']) {

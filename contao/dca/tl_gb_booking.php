@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_gb_booking'] = [
         ],
     ],
     'palettes' => [
-        'default' => '{booking_legend},type,start,end,status;{contact_legend},firstname,lastname,email,phone,message;{meeting_legend},zoomJoinUrl,zoomPassword,zoomMeetingId,googleEventId;{log_legend:hide},createdAt,privacyAt,reminderSentAt,cancelledAt,token',
+        'default' => '{booking_legend},type,start,end,status;{contact_legend},firstname,lastname,email,phone,message;{meeting_legend},zoomJoinUrl,zoomPassword,zoomMeetingId,googleEventId;{payment_legend:hide},amount,shopOrder,shopCheckout,expiresAt;{log_legend:hide},createdAt,privacyAt,reminderSentAt,cancelledAt,token',
     ],
     'fields' => [
         'id' => [
@@ -161,6 +161,26 @@ $GLOBALS['TL_DCA']['tl_gb_booking'] = [
             'sql' => 'int(10) unsigned NOT NULL default 0',
         ],
         'cancelledAt' => [
+            'inputType' => 'text',
+            'eval' => ['rgxp' => 'datim', 'readonly' => true, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
+        'amount' => [
+            'inputType' => 'text',
+            'eval' => ['readonly' => true, 'tl_class' => 'w50'],
+            'sql' => "decimal(10,2) NOT NULL default '0.00'",
+        ],
+        'shopOrder' => [
+            'inputType' => 'text',
+            'eval' => ['readonly' => true, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
+        'shopCheckout' => [
+            'inputType' => 'text',
+            'eval' => ['readonly' => true, 'tl_class' => 'w50'],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+        'expiresAt' => [
             'inputType' => 'text',
             'eval' => ['rgxp' => 'datim', 'readonly' => true, 'tl_class' => 'w50'],
             'sql' => 'int(10) unsigned NOT NULL default 0',

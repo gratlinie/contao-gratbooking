@@ -174,12 +174,13 @@ class Availability
             },
         );
 
-        // Eigene Buchungen blockieren samt ihrem Puffer, damit die Pause nach einem Termin erhalten bleibt
+        // Eigene Buchungen blockieren samt ihrem Puffer, damit die Pause nach einem Termin erhalten bleibt; Reservierungen
+        // bezahlter Termine nur, solange die Zahlung läuft
         $own = $this->db->fetchAllAssociative(
             "SELECT b.id, b.start, b.end, COALESCE(t.bufferBefore, 0) AS bufferBefore, COALESCE(t.bufferAfter, 0) AS bufferAfter
              FROM tl_gb_booking b LEFT JOIN tl_gb_type t ON t.id = b.type
-             WHERE b.calendar = ? AND b.status IN ('confirmed', 'pending') AND b.end > ? AND b.start < ?",
-            [$calendar['id'], $from - 86400, $to + 86400],
+             WHERE b.calendar = ? AND (b.status = 'confirmed' OR (b.status = 'pending' AND b.expiresAt > ?)) AND b.end > ? AND b.start < ?",
+            [$calendar['id'], time(), $from - 86400, $to + 86400],
         );
 
         $exclude = null;
@@ -208,7 +209,7 @@ class Availability
     {
         $counts = [];
 
-        foreach ($this->db->fetchAllAssociative("SELECT id, start FROM tl_gb_booking WHERE type = ? AND status IN ('confirmed', 'pending') AND start BETWEEN ? AND ?", [$type['id'], $from - 86400, $to + 86400]) as $booking) {
+        foreach ($this->db->fetchAllAssociative("SELECT id, start FROM tl_gb_booking WHERE type = ? AND (status = 'confirmed' OR (status = 'pending' AND expiresAt > ?)) AND start BETWEEN ? AND ?", [$type['id'], time(), $from - 86400, $to + 86400]) as $booking) {
             if ((int) $booking['id'] !== $excludeBooking) {
                 $day = (new \DateTimeImmutable('@'.$booking['start']))->setTimezone($tz)->format('Y-m-d');
                 $counts[$day] = ($counts[$day] ?? 0) + 1;
