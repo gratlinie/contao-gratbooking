@@ -26,6 +26,7 @@ $L['managePage'] = ['Management page', 'Page with the module “Manage booking�
 $L['published'] = ['Publish', 'Allow bookings on the website.'];
 $L['googleOk'] = 'Google Calendar readable (service account %s).';
 $L['zoomOk'] = 'Zoom sign-in successful.';
+$L['calendarMissing'] = 'Key saved. Now share the calendar in Google with %s (“Make changes to events”) and enter its calendar ID under “Calendar for bookings”.';
 $L['new'] = ['New calendar', 'Create a new calendar'];
 $L['edit'] = ['Edit', 'Edit calendar ID %s'];
 $L['children'] = ['Appointment types', 'Appointment types of calendar ID %s'];

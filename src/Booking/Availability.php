@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gratlinie\GratBookingBundle\Booking;
 
 use Doctrine\DBAL\Connection;
+use Gratlinie\GratBookingBundle\ApiException;
 use Gratlinie\GratBookingBundle\Google\GoogleCalendar;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -125,7 +126,11 @@ class Availability
     private function busy(array $calendar, int $from, int $to, int|null $excludeBooking, bool $fresh): array
     {
         $ids = array_values(array_unique(array_filter(array_map('trim', preg_split('/[\s,]+/', (string) $calendar['googleBusyCalendars']) ?: []))));
-        $ids = array_values(array_unique([$calendar['googleCalendarId'], ...$ids]));
+        $ids = array_values(array_unique(array_filter([$calendar['googleCalendarId'], ...$ids])));
+
+        if ('' === (string) $calendar['googleCalendarId']) {
+            throw new ApiException('Im Kalender ist kein „Kalender für Buchungen“ eingetragen.');
+        }
 
         $google = static fn (GoogleCalendar $api): array => $api->busy($calendar['googleCredentials'], $ids, $from, $to);
 

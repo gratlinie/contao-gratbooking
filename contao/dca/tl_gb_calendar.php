@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_gb_calendar'] = [
         ],
         'googleCalendarId' => [
             'inputType' => 'text',
-            'eval' => ['mandatory' => true, 'maxlength' => 255, 'decodeEntities' => true, 'tl_class' => 'w50'],
+            'eval' => ['maxlength' => 255, 'decodeEntities' => true, 'tl_class' => 'w50'],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'googleBusyCalendars' => [

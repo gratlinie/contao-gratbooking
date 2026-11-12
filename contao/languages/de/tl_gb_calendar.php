@@ -26,6 +26,7 @@ $L['managePage'] = ['Seite zum Verwalten', 'Seite mit dem Modul „Buchung verwa
 $L['published'] = ['Veröffentlichen', 'Buchungen über die Website zulassen.'];
 $L['googleOk'] = 'Google Kalender lesbar (Dienstkonto %s).';
 $L['zoomOk'] = 'Zoom-Anmeldung erfolgreich.';
+$L['calendarMissing'] = 'Schlüssel gespeichert. Jetzt den Kalender in Google für %s freigeben („Änderungen an Terminen vornehmen“) und hier die Kalender-ID unter „Kalender für Buchungen“ eintragen.';
 $L['new'] = ['Neuer Kalender', 'Neuen Kalender anlegen'];
 $L['edit'] = ['Bearbeiten', 'Kalender ID %s bearbeiten'];
 $L['children'] = ['Terminarten', 'Terminarten des Kalenders ID %s'];

@@ -56,7 +56,14 @@ class BookingDcaListener
     {
         $calendar = $this->db->fetchAssociative('SELECT * FROM tl_gb_calendar WHERE id = ?', [$dc->id]);
 
-        if (!$calendar || !$calendar['googleCredentials'] || !$calendar['googleCalendarId']) {
+        if (!$calendar || !$calendar['googleCredentials']) {
+            return;
+        }
+
+        // Erst Schlüssel speichern, dann (mit der angezeigten Adresse) freigeben und die Kalender-ID eintragen
+        if (!$calendar['googleCalendarId']) {
+            Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_gb_calendar']['calendarMissing'], $calendar['googleAccount']));
+
             return;
         }
 
