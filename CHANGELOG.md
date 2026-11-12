@@ -1,6 +1,6 @@
 # Changelog
 
-## Unveröffentlicht
+## 0.1.0 (2026-11-12)
 
 - Erste Version: Kalender mit Google (Dienstkonto, Free/Busy über mehrere Kalender) und Zoom (Server-to-Server-App),
   Terminarten mit Wochenzeiten, Puffer, Vorlauf, Horizont und Tageslimit; Module *Termin buchen* und *Buchung

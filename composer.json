@@ -1,7 +1,15 @@
 {
     "name": "gratlinie/contao-gratbooking",
     "description": "GratBooking – Termine über die Website buchen: freie Zeiten aus dem Google Kalender, Zoom-Link, Bestätigung, Erinnerung, Absagen und Umbuchen",
-    "keywords": ["contao", "termine", "buchung", "booking", "google-calendar", "zoom", "gratframe"],
+    "keywords": [
+        "contao",
+        "termine",
+        "buchung",
+        "booking",
+        "google-calendar",
+        "zoom",
+        "gratframe"
+    ],
     "type": "contao-bundle",
     "license": "MIT",
     "homepage": "https://github.com/gratlinie/contao-gratbooking",
@@ -11,6 +19,10 @@
             "email": "mail@gratlinie.de"
         }
     ],
+    "support": {
+        "issues": "https://github.com/gratlinie/contao-gratbooking/issues",
+        "source": "https://github.com/gratlinie/contao-gratbooking"
+    },
     "require": {
         "php": "^8.3",
         "ext-openssl": "*",

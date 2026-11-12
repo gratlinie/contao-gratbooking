@@ -1,3 +1,5 @@
+<img src="logo.svg" width="96" height="96" alt="">
+
 # GratBooking
 
 Termine über die Website buchen – Contao 5.7, PHP ≥ 8.3. Freie Zeiten aus dem Google Kalender, Zoom-Meeting je
