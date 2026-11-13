@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_gb_booking'] = [
         ],
     ],
     'palettes' => [
-        'default' => '{booking_legend},type,start,end,status;{contact_legend},firstname,lastname,email,phone,message;{meeting_legend},zoomJoinUrl,zoomPassword,zoomMeetingId,googleEventId;{payment_legend:hide},amount,shopOrder,shopCheckout,expiresAt;{log_legend:hide},createdAt,privacyAt,reminderSentAt,cancelledAt,token',
+        'default' => '{booking_legend},type,start,end,status;{contact_legend},firstname,lastname,email,phone,message;{meeting_legend},zoomJoinUrl,zoomPassword,zoomMeetingId,googleEventId;{log_legend:hide},createdAt,privacyAt,reminderSentAt,cancelledAt,token',
     ],
     'fields' => [
         'id' => [
@@ -187,3 +187,7 @@ $GLOBALS['TL_DCA']['tl_gb_booking'] = [
         ],
     ],
 ];
+
+if (class_exists(\Gratlinie\GratShopBundle\GratlinieGratShopBundle::class)) {
+    $GLOBALS['TL_DCA']['tl_gb_booking']['palettes']['default'] = str_replace(';{log_legend', ';{payment_legend:hide},amount,shopOrder,shopCheckout,expiresAt;{log_legend', $GLOBALS['TL_DCA']['tl_gb_booking']['palettes']['default']);
+}

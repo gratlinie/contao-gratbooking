@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['gb_booking'] = '{title_legend},name,headline,type;{gb_legend},gbCalendar,gbTypes,gbPrivacy;{gb_payment_legend:hide},gbConsent,gbWithdrawalPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['gb_booking'] = '{title_legend},name,headline,type;{gb_legend},gbCalendar,gbTypes,gbPrivacy;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+
+if (class_exists(\Gratlinie\GratShopBundle\GratlinieGratShopBundle::class)) {
+    $GLOBALS['TL_DCA']['tl_module']['palettes']['gb_booking'] = str_replace(';{template_legend', ';{gb_payment_legend:hide},gbConsent,gbWithdrawalPage;{template_legend', $GLOBALS['TL_DCA']['tl_module']['palettes']['gb_booking']);
+}
+
 $GLOBALS['TL_DCA']['tl_module']['palettes']['gb_manage'] = '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
 $GLOBALS['TL_DCA']['tl_module']['fields'] += [
