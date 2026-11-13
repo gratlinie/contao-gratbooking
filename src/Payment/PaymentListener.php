@@ -24,6 +24,8 @@ class PaymentListener
     ) {
     }
 
+    private const DELAYED = ['sepa_debit', 'bacs_debit', 'au_becs_debit', 'acss_debit', 'us_bank_account', 'customer_balance', 'boleto', 'oxxo', 'konbini', 'multibanco'];
+
     #[AsEventListener]
     public function onCheckoutSession(CheckoutSessionEvent $event): void
     {
@@ -37,6 +39,8 @@ class PaymentListener
         // Die Session endet kurz vor der Reservierung, damit nach deren Ablauf niemand mehr zahlen kann
         $event->params['expires_at'] = (int) $event->values['gb_expires'] - 60;
         $event->params['payment_intent_data']['description'] = (string) $event->values['gb_label'];
+        // Nur sofortige Zahlarten: eine Lastschrift o. Ä. wird erst nach Tagen bestätigt, wenn die Reservierung längst abgelaufen ist
+        $event->params['excluded_payment_method_types'] = self::DELAYED;
     }
 
     #[AsEventListener]

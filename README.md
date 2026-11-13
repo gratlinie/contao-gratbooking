@@ -88,8 +88,8 @@ GratBooking braucht es nicht.
   (Backend „Absagen“ löscht Zoom und Google, die Erstattung läuft im Stripe-Dashboard).
 - **Zahlarten** stellt man im Stripe-Dashboard ein (Checkout nutzt die dort aktiven). **PayPal**: *Einstellungen →
   Zahlungsmethoden → PayPal* aktivieren und das PayPal-Geschäftskonto verbinden; bei der Auszahlung lässt sich wählen,
-  ob das Geld im Stripe-Guthaben oder auf dem PayPal-Konto landet. Nur sofortige Zahlarten verwenden (keine
-  SEPA-Lastschrift): eine Zahlung, die erst Tage später bestätigt wird, bestätigt den Termin auch dann, wenn er
-  inzwischen anderweitig vergeben ist.
+  ob das Geld im Stripe-Guthaben oder auf dem PayPal-Konto landet. Zahlarten, die erst Tage später bestätigt
+  werden (SEPA-Lastschrift, Überweisung u. Ä.), blendet GratBooking im Checkout aus – die Reservierung wäre dann
+  längst abgelaufen.
 - Einrichtung von Stripe (Schlüssel in `.env.local`, Webhook `/_gratshop/stripe/webhook`): siehe GratShop. Kunden
   werden als Mitglieder angelegt, die Bestellung steht in GratShop.
