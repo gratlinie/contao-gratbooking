@@ -1,6 +1,6 @@
 # Changelog
 
-## Unveröffentlicht
+## 0.2.2 (2026-11-13)
 
 - Suchmaschinen: Links im Terminkalender (Monat, Tag, Uhrzeit, Terminart) mit `rel="nofollow"`, Seiten mit
   Kalender-Parametern (`?monat=`, `?tag=`, `?zeit=`, `?termin=` …) mit `noindex,follow`. Bisher crawlten Tools wie
