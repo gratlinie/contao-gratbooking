@@ -1,12 +1,12 @@
 # Changelog
 
-## 0.2.0 (unveröffentlicht)
+## 0.2.0 (2026-11-13)
 
 - **Bezahlte Termine mit GratShop** (optional): Terminart mit Preis aus einem GratShop-Produkt (Direktkauf), Termin
   wird während der Zahlung bei Stripe reserviert und nach der Zahlung bestätigt (Zoom, Google, Mail mit
   `##booking_amount##`); Abbruch gibt ihn frei. Zustimmung zum vorzeitigen Beginn mit Link zur Widerrufsbelehrung
   (Modul). Nur sofortige Zahlarten (keine SEPA-Lastschrift). Bezahlte Termine lassen sich online nur verschieben. Cron räumt abgelaufene Reservierungen auf.
-  Ohne GratShop ändert sich nichts. `contao:migrate` ausführen (neue Felder an Buchung, Terminart und Modul).
+  Braucht GratShop ab 0.5.2; ohne GratShop ändert sich nichts. `contao:migrate` ausführen (neue Felder an Buchung, Terminart und Modul).
 
 ## 0.1.1 (2026-11-12)
 
