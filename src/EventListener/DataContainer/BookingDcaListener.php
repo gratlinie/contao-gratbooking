@@ -11,13 +11,14 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Gratlinie\GratBookingBundle\ApiException;
 use Gratlinie\GratBookingBundle\Booking\Availability;
+use Gratlinie\GratBookingBundle\Booking\BookingService;
 use Gratlinie\GratBookingBundle\Google\GoogleCalendar;
 use Gratlinie\GratBookingBundle\Notification\Notifier;
 use Gratlinie\GratBookingBundle\Zoom\Zoom;
 
 /**
  * Backend: Zugangsdaten beim Speichern prüfen (Google lesen, Zoom anmelden), Adresse des Dienstkontos anzeigen,
- * Wochenzeiten prüfen, Alias der Terminart, Darstellung der Listen.
+ * Wochenzeiten prüfen, Alias der Terminart, Darstellung der Listen, beim Löschen einer Buchung Google und Zoom aufräumen.
  */
 class BookingDcaListener
 {
@@ -25,6 +26,7 @@ class BookingDcaListener
         private readonly Connection $db,
         private readonly GoogleCalendar $google,
         private readonly Zoom $zoom,
+        private readonly BookingService $bookings,
     ) {
     }
 
@@ -152,6 +154,19 @@ class BookingDcaListener
         $calendar = (int) ($dc?->activeRecord?->gbCalendar ?? 0);
 
         return $this->db->fetchAllKeyValue('SELECT id, title FROM tl_gb_type WHERE pid = ? ORDER BY sorting', [$calendar]);
+    }
+
+    /**
+     * „Löschen“ entfernt sonst nur den Datensatz – Google-Eintrag und Zoom-Meeting blieben stehen.
+     */
+    #[AsCallback(table: 'tl_gb_booking', target: 'config.ondelete')]
+    public function deleteBooking(DataContainer $dc): void
+    {
+        $booking = $this->db->fetchAssociative('SELECT * FROM tl_gb_booking WHERE id = ?', [$dc->id]);
+
+        if (false !== $booking) {
+            $this->bookings->discard($booking);
+        }
     }
 
     #[AsCallback(table: 'tl_gb_booking', target: 'list.label.label')]

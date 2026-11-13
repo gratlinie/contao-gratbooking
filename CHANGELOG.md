@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 (2026-11-13)
+
+- „Löschen“ einer Buchung im Backend entfernt jetzt auch Google-Eintrag und Zoom-Meeting (ohne Mail an den Kunden).
+  Bisher blieben beide stehen. Wiederherstellen legt sie nicht neu an.
+
 ## 0.2.0 (2026-11-13)
 
 - **Bezahlte Termine mit GratShop** (optional): Terminart mit Preis aus einem GratShop-Produkt (Direktkauf), Termin

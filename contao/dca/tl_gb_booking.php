@@ -7,8 +7,8 @@ use Contao\DC_Table;
 
 /*
  * Gebuchter Termin. Entsteht über das Buchungsmodul; im Backend sieht man Kontaktdaten, Zoom-Link und Status.
- * Absagen und Umbuchen laufen über den Link aus der Bestätigung (token) – oder hier mit „Absagen“, damit auch
- * Google-Eintrag und Zoom-Meeting verschwinden.
+ * Absagen und Umbuchen laufen über den Link aus der Bestätigung (token) – oder hier mit „Absagen“ (mit Mail an den
+ * Kunden). „Löschen“ entfernt Google-Eintrag und Zoom-Meeting ohne Mail.
  */
 $GLOBALS['TL_DCA']['tl_gb_booking'] = [
     'config' => [

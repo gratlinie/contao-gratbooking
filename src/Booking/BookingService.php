@@ -182,27 +182,30 @@ class BookingService
             return;
         }
 
-        // Absagen soll nie an Google oder Zoom scheitern: Fehler loggen, Buchung trotzdem absagen
-        try {
-            if ($booking['googleEventId']) {
-                $this->google->deleteEvent($calendar['googleCredentials'], $calendar['googleCalendarId'], $booking['googleEventId']);
-            }
-        } catch (ApiException $exception) {
-            $this->contaoErrorLogger->error('GratBooking: Google-Eintrag von Buchung ID '.$booking['id'].' nicht gelöscht – '.$exception->getMessage());
-        }
-
-        try {
-            if ($booking['zoomMeetingId']) {
-                $this->zoom->delete($calendar, $booking['zoomMeetingId']);
-            }
-        } catch (ApiException $exception) {
-            $this->contaoErrorLogger->error('GratBooking: Zoom-Meeting von Buchung ID '.$booking['id'].' nicht gelöscht – '.$exception->getMessage());
-        }
+        $this->removeExternal($booking, $calendar);
 
         $booking['status'] = 'cancelled';
         $booking['sequence'] = (int) $booking['sequence'] + 1;
         $this->db->update('tl_gb_booking', ['status' => 'cancelled', 'cancelledAt' => time(), 'sequence' => $booking['sequence'], 'tstamp' => time()], ['id' => $booking['id']]);
         $this->notifier->send(CancelledNotificationType::NAME, $booking);
+        $this->cacheTagManager->invalidateTags(['contao.db.tl_gb_booking']);
+    }
+
+    /**
+     * Beim Löschen im Backend: Google-Eintrag und Zoom-Meeting einer nicht abgesagten Buchung entfernen, ohne Mail.
+     */
+    public function discard(array $booking): void
+    {
+        if ('cancelled' === $booking['status'] || (!$booking['googleEventId'] && !$booking['zoomMeetingId'])) {
+            return;
+        }
+
+        $calendar = $this->db->fetchAssociative('SELECT * FROM tl_gb_calendar WHERE id = ?', [$booking['calendar']]);
+
+        if (false !== $calendar) {
+            $this->removeExternal($booking, $calendar);
+        }
+
         $this->cacheTagManager->invalidateTags(['contao.db.tl_gb_booking']);
     }
 
@@ -284,6 +287,28 @@ class BookingService
             'end' => ['dateTime' => gmdate('Y-m-d\TH:i:s\Z', (int) $booking['end']), 'timeZone' => $calendar['timezone']],
             'extendedProperties' => ['private' => ['gratbooking' => $booking['token']]],
         ];
+    }
+
+    /**
+     * Absagen und Löschen sollen nie an Google oder Zoom scheitern: Fehler loggen, weitermachen.
+     */
+    private function removeExternal(array $booking, array $calendar): void
+    {
+        try {
+            if ($booking['googleEventId']) {
+                $this->google->deleteEvent($calendar['googleCredentials'], $calendar['googleCalendarId'], $booking['googleEventId']);
+            }
+        } catch (ApiException $exception) {
+            $this->contaoErrorLogger->error('GratBooking: Google-Eintrag von Buchung ID '.$booking['id'].' nicht gelöscht – '.$exception->getMessage());
+        }
+
+        try {
+            if ($booking['zoomMeetingId']) {
+                $this->zoom->delete($calendar, $booking['zoomMeetingId']);
+            }
+        } catch (ApiException $exception) {
+            $this->contaoErrorLogger->error('GratBooking: Zoom-Meeting von Buchung ID '.$booking['id'].' nicht gelöscht – '.$exception->getMessage());
+        }
     }
 
     private function rollback(array $calendar, array $booking): void

@@ -26,7 +26,8 @@ läuft aber auch ohne (Variablen `--gb-*`, Fallback auf `--gf-*`).
   frisch gegen Google geprüft und der Kalender gesperrt (keine Doppelbuchung). Dann Zoom-Meeting, Eintrag im
   Google Kalender (mit Kontaktdaten und Zoom-Link), Mails. Scheitert ein Schritt, wird zurückgerollt.
 - **Verwalten** (Modul *Buchung verwalten*, Link aus der Mail): verschieben (Zoom und Google werden angepasst) oder
-  absagen (beides wird gelöscht), bis zur Frist des Kalenders. Im Backend: Liste der Buchungen mit „Absagen“.
+  absagen (beides wird gelöscht), bis zur Frist des Kalenders. Im Backend: Liste der Buchungen mit „Absagen“ (Mail an
+  den Kunden); „Löschen“ entfernt Google-Eintrag und Zoom-Meeting ohne Mail.
 - **Mails** (Notification Center, Typen *Termin gebucht*, *verschoben*, *abgesagt*, *Erinnerung*): Tokens zu Termin,
   Kontakt, Zoom und Verwaltungs-Link; Kalenderdatei als Anhang (`##booking_ics##` in „Anhänge über Tokens“, gleiche UID
   bei Änderungen, `METHOD:CANCEL` bei Absage).
