@@ -1,5 +1,11 @@
 # Changelog
 
+## Unveröffentlicht
+
+- Suchmaschinen: Links im Terminkalender (Monat, Tag, Uhrzeit, Terminart) mit `rel="nofollow"`, Seiten mit
+  Kalender-Parametern (`?monat=`, `?tag=`, `?zeit=`, `?termin=` …) mit `noindex,follow`. Bisher crawlten Tools wie
+  Seobility Hunderte Kalender-URLs.
+
 ## 0.2.1 (2026-11-13)
 
 - „Löschen“ einer Buchung im Backend entfernt jetzt auch Google-Eintrag und Zoom-Meeting (ohne Mail an den Kunden).

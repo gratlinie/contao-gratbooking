@@ -6,9 +6,9 @@
         <div class="gb-picker">
             <div class="gb-month">
                 <div class="gb-month__head">
-                    {% if picker.prev_url %}<a class="gb-month__nav" href="{{ picker.prev_url }}" aria-label="{{ 'MSC.gb_prev_month'|trans([], 'contao_default') }}">‹</a>{% else %}<span class="gb-month__nav" aria-hidden="true"></span>{% endif %}
+                    {% if picker.prev_url %}<a class="gb-month__nav" href="{{ picker.prev_url }}" rel="nofollow" aria-label="{{ 'MSC.gb_prev_month'|trans([], 'contao_default') }}">‹</a>{% else %}<span class="gb-month__nav" aria-hidden="true"></span>{% endif %}
                     <h3 class="gb-month__title">{{ picker.month_label }}</h3>
-                    {% if picker.next_url %}<a class="gb-month__nav" href="{{ picker.next_url }}" aria-label="{{ 'MSC.gb_next_month'|trans([], 'contao_default') }}">›</a>{% else %}<span class="gb-month__nav" aria-hidden="true"></span>{% endif %}
+                    {% if picker.next_url %}<a class="gb-month__nav" href="{{ picker.next_url }}" rel="nofollow" aria-label="{{ 'MSC.gb_next_month'|trans([], 'contao_default') }}">›</a>{% else %}<span class="gb-month__nav" aria-hidden="true"></span>{% endif %}
                 </div>
                 <table class="gb-month__grid">
                     <thead><tr>{% for name in picker.weekdays %}<th scope="col">{{ name }}</th>{% endfor %}</tr></thead>
@@ -18,7 +18,7 @@
                                 {% for day in week %}
                                     <td>
                                         {% if day.available %}
-                                            <a class="gb-day gb-day--free{{ day.selected ? ' is-selected' }}" href="{{ day.url }}"{% if day.selected %} aria-current="date"{% endif %}>{{ day.day }}</a>
+                                            <a class="gb-day gb-day--free{{ day.selected ? ' is-selected' }}" href="{{ day.url }}" rel="nofollow"{% if day.selected %} aria-current="date"{% endif %}>{{ day.day }}</a>
                                         {% elseif day.in_month %}
                                             <span class="gb-day">{{ day.day }}</span>
                                         {% endif %}
@@ -34,7 +34,7 @@
                     <h3 class="gb-times__title">{{ picker.day_label }}</h3>
                     <ul class="gb-times__list" role="list">
                         {% for time in picker.times %}
-                            <li><a class="gb-time{{ time.selected ? ' is-selected' }}" href="{{ time.url }}"{% if time.selected %} aria-current="true"{% endif %}>{{ time.label }}</a></li>
+                            <li><a class="gb-time{{ time.selected ? ' is-selected' }}" href="{{ time.url }}" rel="nofollow"{% if time.selected %} aria-current="true"{% endif %}>{{ time.label }}</a></li>
                         {% endfor %}
                     </ul>
                 {% else %}

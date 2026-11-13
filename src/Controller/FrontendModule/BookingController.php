@@ -6,6 +6,7 @@ namespace Gratlinie\GratBookingBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -52,6 +53,15 @@ class BookingController extends AbstractBookingController
         $calendar = $this->calendar((int) $model->gbCalendar);
         $anchor = 'gb-'.$model->id;
         $template->set('anchor', $anchor);
+
+        // Kalenderansichten (?monat=, ?tag=, ?zeit= …) nicht indexieren, nur die Seite selbst
+        if (array_intersect(['monat', 'tag', 'zeit', 'termin', 'gebucht', 'abgebrochen'], $request->query->keys())) {
+            $context = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
+
+            if ($context?->has(HtmlHeadBag::class)) {
+                $context->get(HtmlHeadBag::class)->setMetaRobots('noindex,follow');
+            }
+        }
 
         if (null === $calendar) {
             return new Response();
